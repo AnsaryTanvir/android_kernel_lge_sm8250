@@ -6,13 +6,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout kernel source
       uses: actions/checkout@v4
 
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential gcc python2
+
     - name: Set up MemKernel as a module (M-OUT) with specified name
       run: |
         curl -LSs "https://raw.githubusercontent.com/Poko-Apps/MemKernel/main/kernel/setup.sh" | bash -s M Dolphin
+
+    - name: Modify gcc-wrapper.py for Python 3 compatibility
+      run: |
+        sed -i 's/print "error, forbidden warning:"/print("error, forbidden warning:")/' kernel/scripts/gcc-wrapper.py
 
     - name: Android kernel build
       uses: lemniskett/android-kernel-actions@master
@@ -25,10 +35,17 @@ jobs:
         defconfig: config
         image: Image.gz-dtb
 
+    - name: Verify build artifacts
+      run: |
+        if [ ! -f "./out/drivers/memkernel/memkernel.ko" ]; then
+          echo "Error: memkernel.ko not found!"
+          exit 1
+        fi
+
     - name: Upload Kernel and Module
       uses: actions/upload-artifact@v4
       with:
-        name: module
+        name: Kernel and Module
         path: |
           ${{ steps.build.outputs.outfile }}
           ./out/drivers/memkernel/memkernel.ko
