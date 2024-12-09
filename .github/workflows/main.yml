@@ -21,7 +21,7 @@ jobs:
         NAME: android_kernel_lge_sm8250
       with:
         arch: arm64
-        compiler: clang/9
+        compiler: gcc/9
         defconfig: config
         image: Image.gz-dtb
 
