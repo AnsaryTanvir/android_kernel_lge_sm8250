@@ -20,10 +20,6 @@ jobs:
       run: |
         curl -LSs "https://raw.githubusercontent.com/Poko-Apps/MemKernel/main/kernel/setup.sh" | bash -s M Dolphin
 
-    - name: Modify gcc-wrapper.py for Python 3 compatibility
-      run: |
-        sed -i 's/print "error, forbidden warning:"/print("error, forbidden warning:")/' kernel/scripts/gcc-wrapper.py
-
     - name: Android kernel build
       uses: lemniskett/android-kernel-actions@master
       id: build
