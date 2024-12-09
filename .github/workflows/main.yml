@@ -18,7 +18,7 @@ jobs:
       uses: lemniskett/android-kernel-actions@master
       id: build
       env:
-        NAME: Loganysl
+        NAME: android_kernel_lge_sm8250
       with:
         arch: arm64
         compiler: clang/9
